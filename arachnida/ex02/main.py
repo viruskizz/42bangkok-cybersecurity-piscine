@@ -4,7 +4,6 @@ import sys
 import os
 import argparse
 from PIL import Image, ExifTags
-import piexif
 from colorama import Fore, Style
 
 EXTENSIONS = [".heif", ".tiff", ".jpg", ".jpeg", ".png", ".gif", ".bmp"]
@@ -26,6 +25,13 @@ def optparsing() -> None:
         "--add",
         action='append',
         help="add metadata EXIF file"
+    )
+    parser.add_argument(
+        "-r",
+        "--replace",
+        default=False,
+        action="store_true",
+        help="Replace modified metadata to original file"
     )
     return parser.parse_args()
 
@@ -54,15 +60,35 @@ def exif_display(fname):
         if key in ExifTags.TAGS:
             print(f'{ExifTags.TAGS[key]}:\t{val}')
 
-def exif_add(fname, adds):
-    im = Image.open(fname)
-    exif_data = im.getexif()
+def exif_add(exif_data: Image.Exif, adds):
+    """ Add metadata key and value to EXIF """
     for add in adds:
         key,value = add.split("=")
         code = exif_find(key)
         if code:
             exif_data[code] = value
-    im.convert('RGB').save('test.jpg', 'JPEG', exif=exif_data)
+    return exif_data
+
+def exif_delete(exif_data: Image.Exif, deletes):
+    """" Delete metadata key from EXIF """
+    for key in deletes:
+        code = exif_find(key)
+        if code in exif_data:
+            del exif_data[code]
+    return exif_data
+
+def exif_opt(fname, args):
+    """ EXIF metadata operation """
+    img = Image.open(fname)
+    exif_data = img.getexif()
+    if args.add and len(args.add) > 0:
+        exif_data = exif_add(exif_data, args.add)
+    if args.delete and len(args.delete) > 0:
+        exif_data = exif_delete(exif_data, args.delete)
+    if args.add or args.delete:
+        file,ext = os.path.splitext(fname)
+        new_filename = fname if args.replace else f'{file}-modified{ext}'
+        img.convert('RGB').save(new_filename, 'JPEG', exif=exif_data)
 
 def validate(fname: str):
     """ Validate EXIF file """
@@ -81,5 +107,4 @@ if __name__ == '__main__':
         if not validate(filename):
             continue
         exif_display(filename)
-        if args.add and len(args.add) > 0:
-            exif_add(filename, args.add)
+        exif_opt(filename, args)
