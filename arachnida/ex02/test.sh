@@ -1,0 +1,1 @@
+./scorpion_bonus -a Make=ubuntu -a Copyright=Araiva -d Software ./data/yes.jpg
