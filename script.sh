@@ -1,3 +1,3 @@
-ENV_DIR=venv
-python -m venv $ENV_DIR
+ENV_DIR=.venv
+python3 -m venv $ENV_DIR
 source $ENV_DIR/bin/activate

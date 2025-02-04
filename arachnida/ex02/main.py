@@ -38,7 +38,6 @@ def validate(fname: str):
 if __name__ == '__main__':
     n = len(sys.argv)
     args = optparsing()
-    print('args:', args)
     for filename in args.files:
         print(Fore.CYAN + f'File: {filename}' + Style.RESET_ALL)
         if not validate(filename):
