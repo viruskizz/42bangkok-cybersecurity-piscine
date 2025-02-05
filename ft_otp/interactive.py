@@ -7,6 +7,12 @@ import hashlib
 import time
 import argparse
 import segno
+from datetime import datetime
+
+from textual.app import App, ComposeResult
+from textual.widgets import Digits, Header
+from textual.containers import Center, Middle, Horizontal
+from textual.timer import Timer
 
 class HOTP:
     """ HOTP operation """
@@ -16,7 +22,6 @@ class HOTP:
     def __init__(self, filename):
         self.key_file = filename
 
-
     def generate_key(self, filename):
         """ Generate key file from Hex secret """
         content = self.__read_hex_secret(filename)
@@ -25,11 +30,11 @@ class HOTP:
             file.write(key)
             print(f"Key was successfully saved in {self.key_file}.")
 
-    def generate_hotp(self, filename):
+    def generate_hotp(self, filename, counter=int(time.time())//30):
         """ Generate HOTP base on 30s with SHA256 """
         bkey = self.__read_key_binary_file(filename)
         key = base64.b32decode(bkey)
-        h = hmac.new(key, self.HTOP_COUNTER.to_bytes(8, byteorder="big"), hashlib.sha256).digest()
+        h = hmac.new(key, counter.to_bytes(8, byteorder="big"), hashlib.sha256).digest()
         code = self.__truncate_code(h)
         return code
 
@@ -104,7 +109,62 @@ def optparsing() -> None:
         "--qrcode",
         help="Generate QRCode uri from secret file"
     )
+    parser.add_argument(
+        "-i",
+        "--interactive",
+        help="Interactive code"
+    )
     return parser.parse_args()
+
+
+class ClockApp(App):
+    CSS = """
+    Horizontal {
+        align: center middle;
+    }
+    #code {
+        width: auto;
+        text-style: bold;
+        margin: 1
+    }
+    #counter {
+        width: auto;
+        padding: 0 2;
+        border: solid yellow;
+        margin-left: 2
+    }
+    """
+
+    # progress_timer: Timer
+    BINDINGS = [("s", "start", "Start")]
+    counter_timer: Timer
+    hotp: HOTP
+    key_file: str
+    code: str
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Horizontal():
+            yield Digits("", id="code")
+            yield Digits("", id="counter")
+
+    def on_mount(self) -> None:
+        """Set up a timer to simulate progess happening."""
+        self.title = "FT Authenticator"
+        self.code = self.hotp.generate_hotp(self.key_file)
+
+    def on_ready(self) -> None:
+        self.query_one("#code").update(self.code)
+        self.update_clock()
+        self.counter_timer = self.set_interval(1, self.update_clock)
+
+    def update_clock(self) -> None:
+        clock = int(time.time())
+        if clock % 30 == 0:
+            self.code = self.hotp.generate_hotp(self.key_file, clock//30)
+            self.query_one("#code").update(self.code)
+        self.query_one("#counter").update(f"{30 - clock % 30}")
+
 
 def main():
     """ Main """
@@ -118,6 +178,11 @@ def main():
             print(code)
         elif args.qrcode:
             hotp.create_qrcode_uri(args.qrcode)
+        elif args.interactive:
+            app = ClockApp()
+            app.hotp = hotp
+            app.key_file = args.interactive
+            app.run()
     except Exception as e:
         print(e)
 
