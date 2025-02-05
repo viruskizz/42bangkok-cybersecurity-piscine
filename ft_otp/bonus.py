@@ -6,6 +6,8 @@ import hmac
 import hashlib
 import time
 import argparse
+import re
+import segno
 
 class HOTP:
     """ HOTP operation """
@@ -18,11 +20,14 @@ class HOTP:
 
     def generate_key(self, filename):
         """ Generate key file from Hex secret """
-        content = self.__read_hex_secret(filename)
-        key = base64.b32encode(bytes(content, 'utf-8'))
-        with open(self.key_file, 'wb') as file:
-            file.write(key)
-            print(f"Key was successfully saved in {self.key_file}.")
+        try:
+            content = self.__read_hex_secret(filename)
+            key = base64.b32encode(bytes(content, 'utf-8'))
+            with open(self.key_file, 'wb') as file:
+                file.write(key)
+                print(f"Key was successfully saved in {self.key_file}.")
+        except Exception as e:
+            print(e)
 
     def generate_hotp(self, filename):
         """ Generate HOTP base on 30s with SHA256 """
@@ -31,6 +36,24 @@ class HOTP:
         h = hmac.new(key, self.HTOP_COUNTER.to_bytes(8, byteorder="big"), hashlib.sha256).digest()
         code = self.__truncate_code(h)
         return code
+
+    def create_uri(self, filename):
+        """
+        Create uri
+        Example: otpauth://totp/{NAME}?secret={SECRET}>&algorithm=<<ALGO>>
+        """
+        file = open(filename, "r", encoding='utf-8')
+        key = file.read()
+        name = "example"
+        issuer = 'ft_otp'
+        uri = f"otpauth://totp/{issuer}:{name}?secret={key}&issuer={issuer}&algorithm=SHA256&digits=6&period=30"
+        print(uri)
+        return uri
+
+    def create_qrcode_uri(self, filename):
+        uri = self.create_uri(filename)
+        img = segno.make(uri)
+        img.save('ft_otp.png', scale=3)
 
     def __is_hex(self, s):
         """ Validate string is hexadecimal """
@@ -81,11 +104,17 @@ def optparsing() -> None:
         default='ft_otp.key',
         help="Output to file",
     )
+    parser.add_argument(
+        "-q",
+        "--qrcode",
+        help="Generate QRCode uri from secret file"
+    )
     return parser.parse_args()
 
 def main():
     """ Main """
     args = optparsing()
+    print('args:', args)
     hotp = HOTP(args.output)
     try:
         if args.generate:
@@ -93,6 +122,8 @@ def main():
         elif args.key:
             code = hotp.generate_hotp(args.key)
             print(code)
+        elif args.qrcode:
+            hotp.create_qrcode_uri(args.qrcode)
     except Exception as e:
         print(e)
 
