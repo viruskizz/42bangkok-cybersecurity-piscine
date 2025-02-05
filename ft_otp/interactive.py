@@ -6,9 +6,9 @@ import hmac
 import hashlib
 import time
 import argparse
-import segno
 from datetime import datetime
 
+import segno
 from textual.app import App, ComposeResult
 from textual.widgets import Digits, Header
 from textual.containers import Center, Middle, Horizontal
