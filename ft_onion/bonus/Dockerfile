@@ -1,11 +1,15 @@
 FROM node:bookworm
 
 RUN apt-get update -y && apt-get install -y \
-    tor \
-    vim
+    vim \
+    sudo \
+    openssh-server \
+    tor 
+
+RUN echo 'root:root' | chpasswd
 
 COPY conf/torrc /etc/tor/
-COPY tools      /tools
+COPY tools/     /tools/
 
 WORKDIR /app
 

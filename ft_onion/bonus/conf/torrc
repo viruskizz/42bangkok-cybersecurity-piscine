@@ -192,4 +192,4 @@
 
 HiddenServiceDir /var/lib/tor/bonus/
 HiddenServicePort 80 127.0.0.1:3000
-HiddenServicePort 22 127.0.0.1:22
+HiddenServicePort 4242 127.0.0.1:22

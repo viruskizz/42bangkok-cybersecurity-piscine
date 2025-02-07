@@ -5,11 +5,14 @@ $(NAME): all
 
 all: up
 
+prepare:
+	bash tools/prepare.sh
+
 up:
 	docker compose up -d
 
 dev:
-	docker compose up -d --buil
+	docker compose up -d --build
 
 stop:
 	docker compose stop
