@@ -3,9 +3,12 @@ Create own dark web under onion network
 
 References:
 - [Onion Setup]
-- [SSH to Tor network]
-
+- [Onion Client Authorization]
+- [Tor Authentication v3]
+- [SSH Hardening]
 
 <!-- Link -->
 [Onion Setup]: https://community.torproject.org/onion-services/setup/
-[SSH to Tor network]: https://medium.com/@tzhenghao/how-to-ssh-over-tor-onion-service-c6d06194147
+[Onion Client Authorization]: https://community.torproject.org/onion-services/advanced/client-auth/
+[Tor Authentication v3]: https://objsal.medium.com/tor-v3-authentication-1f3fd7192fea
+[SSH Hardening]: https://www.cyberciti.biz/faq/how-to-disable-ssh-password-login-on-linux/
