@@ -12,7 +12,7 @@ up:
 	docker compose up -d
 
 dev:
-	docker compose up --build
+	docker compose up -d --build
 
 stop:
 	docker compose stop

@@ -5,8 +5,9 @@ services:
     container_name: onion_bonus
     build:
       context: .
+    volumes:
+      - ./cred:/tmp/cred
     ports:
-      - 80:80
-      - 4242:4242
-      - 22:22
+      - 8000:3000
+      - 2424:4242
     restart: always

@@ -5,14 +5,14 @@ $(NAME): all
 
 all: up
 
-prepare:
-	bash tools/prepare.sh
+exec:
+	docker exec -it onion_bonus /bin/bash
 
 up:
 	docker compose up -d
 
 dev:
-	docker compose up -d --build
+	docker compose up --build
 
 stop:
 	docker compose stop
