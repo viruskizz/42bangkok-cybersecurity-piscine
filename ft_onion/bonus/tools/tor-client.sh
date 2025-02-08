@@ -11,4 +11,5 @@ kill -9 $(ps | grep tor | awk '{print $1}')
 tor -f client.torrc
 
 ## Final access to tor network
-torify ssh -p 4242 $USER@$ONION_SITE
+cat $PRIVATE_KEY > id_ed25519
+torify ssh -p 4242 $USER@$ONION_SITE -i id_ed25519

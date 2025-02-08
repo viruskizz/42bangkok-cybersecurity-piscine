@@ -5,13 +5,8 @@ services:
     container_name: onion_bonus
     build:
       context: .
-    # volumes:
-    #   - ./ssh:/tmp/ssh
-    #   - ./auth:/tmp/auth
-    ports:
-      - 8080:3000
-      - 2424:4242
+    # Bind port for local testing
+    # ports:
+    #   - 8080:3000
+    #   - 2424:4242
     restart: always
-volumes:
-  auth:
-    

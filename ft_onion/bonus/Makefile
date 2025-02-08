@@ -5,15 +5,13 @@ $(NAME): all
 
 all: up
 
-prepare:
-	mkdir -p ssh
-	mkdir -p auth
-
-up: prepare
+up:
 	docker compose up -d
 
-dev: prepare
+dev:
 	docker compose up --build
+	docker cp onion_bonus:/tmp/auth ./auth
+	docker cp onion_bonus:/tmp/ssh ./ssh
 
 exec:
 	docker exec -it onion_bonus /bin/bash
