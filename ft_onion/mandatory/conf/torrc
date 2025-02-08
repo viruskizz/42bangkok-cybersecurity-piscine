@@ -190,6 +190,6 @@
 ## address manually to your friends, uncomment this line:
 #PublishServerDescriptor 0
 
-HiddenServiceDir /var/lib/tor/other_hidden_service/
-HiddenServicePort 80 127.0.0.1:8080
+HiddenServiceDir /var/lib/tor/mandatory/
+HiddenServicePort 80 127.0.0.1:80
 HiddenServicePort 22 127.0.0.1:22

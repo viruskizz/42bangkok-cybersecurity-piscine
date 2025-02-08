@@ -5,11 +5,14 @@ $(NAME): all
 
 all: up
 
+exec:
+	docker exec -it onion /bin/bash
+
 up:
 	docker compose up -d
 
 dev:
-	docker compose up -d --buil
+	docker compose up --build
 
 stop:
 	docker compose stop
@@ -20,6 +23,7 @@ down:
 re: down up
 
 clean: down
-	-docker rmi -f $$(docker images "${NAME}*" | awk 'NR!=1 {print}' | awk '{print $$1}')
+	-docker rmi -f $$(docker images "mandatory-*" | awk 'NR!=1 {print}' | awk '{print $$1}')
+	-docker rmi -f $$(docker images --filter "dangling=true" -q --no-trunc)
 
 .PHONY: mkdir_data up down stop clean fclean re
