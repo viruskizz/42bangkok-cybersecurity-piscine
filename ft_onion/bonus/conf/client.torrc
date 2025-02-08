@@ -1,1 +1,2 @@
+# Location of client auth_private
 ClientOnionAuthDir /var/lib/tor/onion_auth

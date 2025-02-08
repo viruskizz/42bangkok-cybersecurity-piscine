@@ -1,4 +1,5 @@
 #!/bin/bash
+# Create authentication for Tor network
 RESET="\033[0m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
