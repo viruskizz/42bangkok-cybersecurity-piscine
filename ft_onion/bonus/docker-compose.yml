@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    container_name: onion_bonus
+    build:
+      context: .
+    ports:
+      - 80:80
+      - 4242:4242
+      - 22:22
+    restart: always
