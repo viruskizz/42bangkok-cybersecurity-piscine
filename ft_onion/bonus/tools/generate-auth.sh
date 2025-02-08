@@ -3,14 +3,14 @@ RESET="\033[0m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
 
-USER=viruskizz
-DIR=/tmp/cred
+CLIENT=client
+DIR=/tmp/auth
 TOR_DIR=/var/lib/tor/bonus
-PEM_KEY=$DIR/$USER.key.pem
-PRIVATE_KEY=$DIR/$USER.prv.key
-PUBLIC_KEY=$DIR/$USER.pub.key
-SERVER_AUTH_FILE=$DIR/$USER.auth
-CLIENT_AUTH_FILE=$DIR/$USER.auth_private
+PEM_KEY=$DIR/$CLIENT.key.pem
+PRIVATE_KEY=$DIR/.prv.key
+PUBLIC_KEY=$DIR/$CLIENT.pub.key
+SERVER_AUTH_FILE=$DIR/$CLIENT.auth
+CLIENT_AUTH_FILE=$DIR/$CLIENT.auth_private
 
 mkdir -p $DIR
 
@@ -33,6 +33,7 @@ ONION_SITE_NAME=$(echo "$ONION_SITE" | sed 's/.onion//g')
 
 echo "descriptor:x25519:$(cat $PUBLIC_KEY)" > $SERVER_AUTH_FILE
 echo "$ONION_SITE_NAME:descriptor:x25519:$(cat $PRIVATE_KEY)" > $CLIENT_AUTH_FILE
-echo -e $GREEN"Tor auth key generared: $AUTH_FILE"$RESET
-cp $AUTH_FILE $TOR_DIR/authorized_clients
+echo -e $GREEN"Tor auth key generared: $SERVER_AUTH_FILE"$RESET
+# mkdir -p $TOR_DIR/authorized_clients
+cp $SERVER_AUTH_FILE $TOR_DIR/authorized_clients
 echo -e $GREEN"Copied cred to HiddenService"$RESET

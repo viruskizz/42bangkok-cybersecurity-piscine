@@ -21,6 +21,10 @@ RUN useradd ${USER} \
     -m \
     -p $(openssl passwd -6 "${PASS}")
 
+USER viruskizz
+
+RUN /tools/generate-ssh.sh
+
 WORKDIR /app
 
 COPY app/package.json .
@@ -28,5 +32,7 @@ COPY app/package.json .
 RUN npm install
 
 COPY app .
+
+USER root
 
 ENTRYPOINT [ "/tools/docker-entrypoint.sh" ]

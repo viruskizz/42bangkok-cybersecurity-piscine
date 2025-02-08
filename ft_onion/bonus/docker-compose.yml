@@ -5,9 +5,13 @@ services:
     container_name: onion_bonus
     build:
       context: .
-    volumes:
-      - ./cred:/tmp/cred
+    # volumes:
+    #   - ./ssh:/tmp/ssh
+    #   - ./auth:/tmp/auth
     ports:
-      - 8000:3000
+      - 8080:3000
       - 2424:4242
     restart: always
+volumes:
+  auth:
+    
