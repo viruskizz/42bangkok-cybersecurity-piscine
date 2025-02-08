@@ -1,0 +1,13 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<div class="container min-h-100 mt-2">
+    <h1>Hi, I am <%= user.firstName  %> <%= user.lastName %></h1>
+    <h2>Welcome to Tor network in onion service</h2>
+    <div class="card">
+        <div class="card-body text-center">
+            <h2>NOW</h2>
+            <p class="display-4" id="time">_:_:_</p>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer') %>
