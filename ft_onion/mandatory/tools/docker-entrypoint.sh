@@ -1,13 +1,17 @@
 #!/bin/bash
-NO_FORMAT="\033[0m"
+RESET="\033[0m"
+GREEN="\033[32m"
 YELLOW="\033[33m"
 
-# /usr/sbin/sshd -D -e
-tor -f /etc/tor/torrc & \
-# Sleep for waiting tor initialize
-sleep 20
+# Start sshd
+/etc/init.d/ssh restart
+echo -e $GREEN"SSHD server restart"$RESET
 
+# Start tor and wait initialize
+tor -f /etc/tor/torrc &
+sleep 30
 ONION_SITE=$(cat /var/lib/tor/mandatory/hostname)
-echo -e $YELLOW"ONION_SITE=$ONION_SITE"$NO_FORMAT
+echo -e $YELLOW"ONION_SITE=$ONION_SITE"$RESET
 
+# Start nginx
 nginx -g "daemon off;"

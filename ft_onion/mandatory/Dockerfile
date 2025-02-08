@@ -12,13 +12,15 @@ RUN apt-get install -y \
     openssh-server \
     tor
 
+RUN mkdir /var/run/sshd
+
 COPY conf/default.conf      /etc/nginx/conf.d/
 COPY conf/nginx.conf        /etc/nginx/
 COPY conf/torrc             /etc/tor/
 COPY conf/sshd_default.conf /etc/ssh/sshd_config.d/
-COPY index.html             /usr/share/nginx/html
+COPY tools                  /tools
 
-COPY tools /tools
+COPY index.html /usr/share/nginx/html
 
 RUN useradd ${USER} \
     -g users \

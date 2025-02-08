@@ -5,10 +5,8 @@ services:
     container_name: onion
     build:
       context: .
-    # volumes:
-    #   - ./conf/default.conf:/etc/nginx/conf.d/default.conf
-    #   - ./index.html:/usr/share/nginx/html/index.html
-    ports:
-      - 8000:80
-      - 2424:22
+    # Bind port for local testing
+    # ports:
+    #   - 8000:80
+    #   - 2424:4242
     restart: always
