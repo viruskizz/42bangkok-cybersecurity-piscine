@@ -6,10 +6,12 @@ $(NAME): all
 all: up
 
 up:
-	docker compose up -d
+	docker compose up --build --detach
 
-dev:
-	docker compose up --build
+log:
+	docker log --follow onion_bonus
+
+cp:
 	docker cp onion_bonus:/tmp/auth ./auth
 	docker cp onion_bonus:/tmp/ssh ./ssh
 

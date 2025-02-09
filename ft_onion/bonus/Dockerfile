@@ -1,6 +1,9 @@
 FROM node:bookworm
 LABEL authors="viruskizz"
 
+ARG USER=viruskizz
+ARG PASS=viruskizz
+
 ## Prerequisite
 RUN apt-get update -y && apt-get install -y \
     basez \

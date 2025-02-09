@@ -5,8 +5,8 @@ services:
     container_name: onion_bonus
     build:
       context: .
-    volumes:
-      - ./app:/app
+    # volumes:
+    #   - ./app:/app
     # Bind port for local testing
     ports:
       - 8080:3000
