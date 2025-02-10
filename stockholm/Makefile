@@ -20,6 +20,7 @@ down:
 	docker compose down
 
 clean: down
+	-rm -rf app/__pycache__
 	-docker rmi -f $$(docker images "stockholm-*" | awk 'NR!=1 {print}' | awk '{print $$1}')
 	-docker rmi -f $$(docker images --filter "dangling=true" -q --no-trunc)
 
