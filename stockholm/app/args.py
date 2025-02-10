@@ -7,6 +7,13 @@ def optparsing() -> None:
     parser = argparse.ArgumentParser(prog="Stokholm", description="Do you wannacry ?")
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
     parser.add_argument(
+        "-k",
+        "--key",
+        default=False,
+        action="store_true",
+        help="Generate private and public key"
+    )
+    parser.add_argument(
         "-r",
         "--reverse",
         default=False,
