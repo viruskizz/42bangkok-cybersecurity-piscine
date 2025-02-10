@@ -9,4 +9,6 @@ def log_title(title: str) -> None:
 def log_info(message: str, key: str = None) -> None:
     is_silent = os.environ.get('STOCKHOLM_IS_SILENT')
     if not eval(is_silent):
-        print(key if key else '' + message)
+        if key:
+            print(key, end=" ")
+        print(message)
