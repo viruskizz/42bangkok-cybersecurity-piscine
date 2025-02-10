@@ -54,11 +54,11 @@ int main(void)
 
 void ok(void)
 {
-    printf("Good job.\n");
+    puts("Good job.");
 }
 
 void no(void)
 {
-    printf("Nope.\n");
+    puts("Nope.");
     exit(1);
 }
