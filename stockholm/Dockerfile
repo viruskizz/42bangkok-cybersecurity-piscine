@@ -15,7 +15,12 @@ RUN useradd ${USER} \
 
 RUN mkdir -p /users/src/app && \
     chown -R viruskizz:users /users/src/app
+
 USER viruskizz
+
+RUN mkdir /home/infection && \
+    chmod 777 /home/infection
+
 
 ## Configuration python app
 

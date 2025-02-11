@@ -5,14 +5,14 @@ services:
     volumes:
       - ./app:/usrs/src/app
       - ./infection:/home/infection
-    depends_on:
-      - infection
-  infection:
-    container_name: infection
-    image: alpine:latest
-    volumes:
-      - ./infection:/home/infection
-    command: sleep infinity
+    # depends_on:
+    #   - infection
+  # infection:
+  #   container_name: infection
+  #   image: alpine:latest
+  #   volumes:
+  #     - ./infection:/home/infection
+  #   command: sleep infinity
 
 # volumes:
 #   infection:
