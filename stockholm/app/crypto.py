@@ -8,15 +8,6 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
 from logger import log_info, log_title, log_error
 
-def encrypt_file(filename: str):
-    try:
-        with open(filename, 'rb') as original_file:
-            original_data = original_file.read()
-            print(original_data)
-    except KeyError as e:
-        log_error(f'INVALID KEY: {e}')
-    except Exception as e:
-        print(e)
 
 def generate_private_key() -> RSAPrivateKey:
     """ Generate private key as PEM serialize without any encrypted """
@@ -36,6 +27,18 @@ def generate_private_key() -> RSAPrivateKey:
     os.environ['STOCKHOLM_PRIVATE_KEY'] = filename
     return private_key
 
+def load_private_key() -> RSAPrivateKey:
+    try:
+        private_key_filename = os.environ['STOCKHOLM_PRIVATE_KEY']
+        with open(private_key_filename, 'rb') as private_key_file:
+            private_key = serialization.load_pem_private_key(
+                private_key_file.read(),
+                password=None
+            )
+            return private_key
+    except Exception as e:
+        log_error('Error Loading Private key')
+
 def generate_public_key(private_key: RSAPrivateKey) -> RSAPublicKey:
     public_key = private_key.public_key()
     public_pem = public_key.public_bytes(
@@ -49,6 +52,17 @@ def generate_public_key(private_key: RSAPrivateKey) -> RSAPublicKey:
     os.environ['STOCKHOLM_PUBLIC_KEY'] = filename
     return public_key
 
+def load_public_key() -> RSAPublicKey:
+    try:
+        public_key_filename = os.environ['STOCKHOLM_PUBLIC_KEY']
+        with open(public_key_filename, 'rb') as public_key_file:
+            public_key = serialization.load_pem_public_key(
+                public_key_file.read()
+            )
+            return public_key
+    except Exception as e:
+        log_error('Error Loading Public key')
+
 def generate_symmetric_key() -> Fernet:
     filename = 'symmetric.key'
     symmetric_key = Fernet.generate_key()
@@ -59,25 +73,56 @@ def generate_symmetric_key() -> Fernet:
     os.environ['STOCKHOLM_SYMMETRIC_KEY'] = filename
     return fernet
 
-def load_public_key(filename = None) -> RSAPublicKey:
-    public_key_filename = filename if filename else os.environ['STOCKHOLM_PUBLIC_KEY']
-    with open(public_key_filename, 'rb') as public_key_file:
-        public_key = serialization.load_pem_public_key(
-            public_key_file.read()
-        )
-        return public_key
+def load_symmetric_key() -> Fernet:
+    try:
+        symmetric_key_filename = os.environ.get('STOCKHOLM_SYMMETRIC_KEY')
+        with open(symmetric_key_filename, 'rb') as symmetric_key_file:
+            symmetric_key = symmetric_key_file.read()
+            fernet = Fernet(symmetric_key)
+            return fernet
+    except Exception as e:
+        log_error('Error Loading Symmetric key')
 
-def load_private_key(filename = None) -> RSAPrivateKey:
-    private_key_filename = filename if filename else os.environ['STOCKHOLM_PRIVATE_KEY']
-    with open(private_key_filename, 'rb') as private_key_file:
-        private_key = serialization.load_pem_private_key(
-            private_key_file.read()
+def encrypt_symmetric_key():
+    try:
+        hybrid_key_filename = os.environ.get('STOCKHOLM_HYBRID_KEY')
+        symmetric_key_filename = os.environ.get('STOCKHOLM_SYMMETRIC_KEY')
+        with open(symmetric_key_filename, 'rb') as symmetric_key_file:
+            symmetric_key = symmetric_key_file.read()
+        public_key = load_public_key()
+        if not public_key:
+            return
+        ciphertext = public_key.encrypt(
+             symmetric_key,
+             padding.OAEP(
+                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                 algorithm=hashes.SHA256(),
+                 label=None
+             )
         )
-        return private_key
+        with open(hybrid_key_filename, 'wb') as hybrid_key_file:
+            hybrid_key_file.write(ciphertext)
+        log_info(key=f'{hybrid_key_filename} ', message='has been generated')
+    except Exception as e:
+        log_error('Encrypt Symmetric Key Error: could not load symmetric key')
 
-def load_symmetric_key(filename = None) -> Fernet:
-    symmetric_key_filename = filename if filename else os.environ['STOCKHOLM_SYMMETRIC_KEY']
-    with open(symmetric_key_filename, 'rb') as symmetric_key_file:
-        symmetric_key = symmetric_key_file.read()
-        fernet = Fernet(symmetric_key)
-        return fernet
+def decrypt_symmetric_key():
+    try:
+        hybrid_key_filename = os.environ.get('STOCKHOLM_HYBRID_KEY')
+        symmetric_key_filename = os.environ.get('STOCKHOLM_SYMMETRIC_KEY')
+        with open(hybrid_key_filename, 'wb') as hybrid_key_file:
+            ciphertext = hybrid_key_file.read()
+        private_key = load_private_key()
+        symmetric_key = private_key.decrypt(
+            ciphertext,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
+        with open(symmetric_key_filename, 'wb') as symmetric_key_file:
+            symmetric_key_file.write(symmetric_key)
+        log_info(key=f'{symmetric_key_filename} ', message='has been generated')
+    except Exception as e:
+        log_error('Decrypt Symmetric Key Error: could not load private key')
