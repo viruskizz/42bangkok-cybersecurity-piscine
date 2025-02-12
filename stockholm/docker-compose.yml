@@ -2,20 +2,7 @@ services:
   stockholm:
     container_name: stockholm
     build: .
-    volumes:
-      - ./app:/usrs/src/app
-      - ./infection:/home/infection
-    # depends_on:
-    #   - infection
-  # infection:
-  #   container_name: infection
-  #   image: alpine:latest
-  #   volumes:
-  #     - ./infection:/home/infection
-  #   command: sleep infinity
-
-# volumes:
-#   infection:
-#     driver_opts:
-#       src: ./infection
-#       dest: /home/infection
+    ## Mount volume for dev
+    # volumes:
+    #   - ./app:/usrs/src/app
+    #   - ./infection:/home/infection

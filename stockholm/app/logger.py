@@ -4,13 +4,13 @@ import os
 def log_title(title: str) -> None:
     is_silent = os.environ.get('STOCKHOLM_IS_SILENT')
     if not eval(is_silent):
-        print(Fore.YELLOW + title + Style.RESET_ALL)
+        print(Fore.MAGENTA + title + Style.RESET_ALL)
 
 def log_info(message: str, key: str = None) -> None:
     is_silent = os.environ.get('STOCKHOLM_IS_SILENT')
     if not eval(is_silent):
         if key:
-            print(Fore.LIGHTCYAN_EX + key + Style.RESET_ALL, end=" ")
+            print(Fore.CYAN + key + Style.RESET_ALL, end=" ")
         print(message)
 
 

