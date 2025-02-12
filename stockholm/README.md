@@ -1,3 +1,6 @@
+<center>
+    <img src="assets/wannay-cry-cover.png">
+</center>
 # Stockholm
 This program is a part of 42 cybersecurity piscine. that work for malware creation. The `Stockholm` program is wannacry cloned progame that work same as this thing
 
@@ -29,6 +32,7 @@ WannaCry targets computers using Microsoft Windows as an operating system. It en
 ## How wannacry works
 
 The wannacry use hybrid key solution to encrypt a file with RSA and AES .
+
 <img src="./assets/wannacry-encryption.png">
 
 # Install
@@ -61,9 +65,9 @@ To reverese encrypted file to normal
 ./stockholm -r
 ```
 ## CLI option
-    - -v, --version to check program version
-    - -s, --silent to mute program loggin output
-    - -p, --path to specify path to encrypt files
+* `-v`, `--version` to check program version
+* `-s`, `--silent` to mute program loggin output
+* `-p`, `--path to` specify path to encrypt files
 
 
 # Sources
