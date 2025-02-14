@@ -10,8 +10,11 @@ up:
 exec-server:
 	docker exec -it ${NAME}-server-1 /bin/bash
 
-exec-client:
+exec-src:
 	docker exec -it ${NAME}-client-1 /bin/bash
+
+exec-dest:
+	docker exec -it ${NAME}-client-2 /bin/bash
 
 stop:
 	docker compose stop

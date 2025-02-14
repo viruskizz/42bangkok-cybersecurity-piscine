@@ -1,13 +1,21 @@
 services:
   server:
+    container_name: server
     build:
       context: .
       dockerfile: Dockerfile.server
     hostname: 'server'
     volumes:
       - ./app:/urs/srcs/app/
-  client:
+  source:
+    container_name: src
     build:
       context: .
       dockerfile: Dockerfile.client
-    hostname: client
+    hostname: src
+  destination:
+    container_name: dest
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    hostname: dest
