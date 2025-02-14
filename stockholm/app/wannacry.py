@@ -90,8 +90,8 @@ class Wannacry:
         encrypt_symmetric_key()
 
     def __to_hybrid_key__(self):
-        symmetric_key_filename = os.environ.get('STOCKHOLM_SYMMETRIC_KEY')
-        hybrid_key_filename = os.environ.get('STOCKHOLM_HYBRID_KEY')
+        hybrid_key_filename = os.environ.get('STOCKHOLM_HYBRID_KEY', 'hybrid.pem')
+        symmetric_key_filename = os.environ.get('STOCKHOLM_SYMMETRIC_KEY', 'symmetric.key')
         if not os.path.isfile(hybrid_key_filename):
             log_title('Encrypting symmetric key')
             encrypt_symmetric_key()

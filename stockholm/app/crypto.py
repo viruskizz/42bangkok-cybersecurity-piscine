@@ -119,7 +119,8 @@ def decrypt_symmetric_key():
         log_error('Decrypt Symmetric Key Error: could not load private key')
 
 def write_file(filename: str, mode: str, data: any):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    if os.path.dirname(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, mode=mode) as f:
         f.write(data)
     log_info(key=f'{filename} ', message='has been created')
