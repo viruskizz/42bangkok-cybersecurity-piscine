@@ -1,0 +1,8 @@
+FROM kalilinux/kali-last-release:latest
+
+RUN apt-get update -y && apt-get install -y \
+    iputils-ping \
+    ncat \
+    net-tools
+
+CMD ["sleep", "infinity"]
