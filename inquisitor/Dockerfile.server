@@ -17,5 +17,4 @@ COPY app .
 
 RUN pip install -r requirements.txt
 
-# CMD ["bash", "/tools/server-entrypoint.sh"]
 ENTRYPOINT [ "tail", "-f",  "/dev/null" ]

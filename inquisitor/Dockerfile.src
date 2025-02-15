@@ -4,9 +4,7 @@ RUN apt-get update -y && apt-get install -y \
     iputils-ping \
     net-tools \
     curl \
+    telnet \
     ftp
-
-EXPOSE 21
-EXPOSE 4242
 
 CMD ["sleep", "infinity"]

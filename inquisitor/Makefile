@@ -14,7 +14,7 @@ exec-src:
 	docker exec -it src /bin/bash
 
 exec-dest:
-	docker exec -it dest /bin/bash
+	docker exec -it dest /bin/sh
 
 network:
 	docker network inspect inquisitor_main | jq '.[].Containers[] | {name: .Name, mac: .MacAddress, ip: .IPv4Address}'

