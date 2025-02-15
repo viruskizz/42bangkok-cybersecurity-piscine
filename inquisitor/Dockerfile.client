@@ -3,6 +3,8 @@ FROM debian:bookworm
 RUN apt-get update -y && apt-get install -y \
     iputils-ping \
     ncat \
-    net-tools
+    net-tools \
+    curl \
+    wget
 
 CMD ["sleep", "infinity"]
