@@ -2,9 +2,11 @@ FROM debian:bookworm
 
 RUN apt-get update -y && apt-get install -y \
     iputils-ping \
-    ncat \
     net-tools \
     curl \
-    wget
+    ftp
+
+EXPOSE 21
+EXPOSE 4242
 
 CMD ["sleep", "infinity"]

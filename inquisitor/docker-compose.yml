@@ -13,7 +13,7 @@ services:
     container_name: src
     build:
       context: .
-      dockerfile: Dockerfile.client
+      dockerfile: Dockerfile.src
     hostname: src
     networks:
       - main
@@ -21,7 +21,7 @@ services:
     container_name: dest
     build:
       context: .
-      dockerfile: Dockerfile.client
+      dockerfile: Dockerfile.dest
     hostname: dest
     networks:
       - main

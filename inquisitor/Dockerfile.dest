@@ -1,0 +1,24 @@
+FROM debian:bookworm
+
+ARG USER=ftpuser
+ARG PASS=ftpuser
+
+RUN apt-get update -y && apt-get install -y \
+    iputils-ping \
+    net-tools \
+    curl \
+    vsftpd 
+
+RUN useradd ${USER} \
+    -g users \
+    -G sudo \
+    -m \
+    -p $(openssl passwd -6 "${PASS}")
+
+RUN  mkdir -p /etc/vsftpd/
+COPY confs/vsftpd.conf /etc/vsftpd/vsftpd.conf
+
+EXPOSE 21 21000-21010
+EXPOSE 4242
+
+CMD ["vsftpd", "/etc/vsftpd/vsftpd.conf"]
