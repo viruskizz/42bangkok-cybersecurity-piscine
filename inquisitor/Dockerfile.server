@@ -1,8 +1,21 @@
 FROM kalilinux/kali-last-release:latest
 
 RUN apt-get update -y && apt-get install -y \
+    python3 \
+    python3-pip \
+    pipx \
     iputils-ping \
     ncat \
     net-tools
 
-CMD ["sleep", "infinity"]
+RUN mkdir -p /root/.config/pip && \
+    echo '[global]\nbreak-system-packages = true' > /root/.config/pip/pip.conf
+
+WORKDIR /usr/src/app
+
+COPY app .
+
+RUN pip install -r requirements.txt
+
+# CMD ["bash", "/tools/server-entrypoint.sh"]
+ENTRYPOINT [ "tail", "-f",  "/dev/null" ]

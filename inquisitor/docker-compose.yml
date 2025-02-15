@@ -4,18 +4,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.server
-    hostname: 'server'
+    hostname: server
     volumes:
-      - ./app:/urs/srcs/app/
+      - ./app:/usr/src/app/
+    networks:
+      - main
   source:
     container_name: src
     build:
       context: .
       dockerfile: Dockerfile.client
     hostname: src
+    networks:
+      - main
   destination:
     container_name: dest
     build:
       context: .
       dockerfile: Dockerfile.client
     hostname: dest
+    networks:
+      - main
+
+networks:
+  main:
