@@ -1,1 +1,10 @@
+argcomplete==3.5.1
+click==8.1.7
+colorama==0.4.6
+packaging==24.1
+pipx==1.7.1
+platformdirs==4.3.6
+psutil==5.9.8
 scapy==2.6.1
+userpath==1.9.1
+wheel==0.45.0
