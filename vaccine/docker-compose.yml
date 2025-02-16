@@ -1,0 +1,35 @@
+services:
+  app:
+    container_name: vaccine-app
+    hostname: app
+    build:
+      context: app
+    volumes:
+      - ./app:/usr/src/app/
+    networks:
+      - app
+  api:
+    container_name: vaccine-api
+    hostname: api
+    build:
+      context: api
+    volumes:
+      - ./api:/usr/src/app
+    networks:
+      - app
+    ports:
+      - 3000:3000
+  mysql:
+    image: mysql:8.0
+    container_name: vaccine-mysql
+    hostname: mysql
+    networks:
+      - app
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vaccine
+      MYSQL_USER: viruskizz
+      MYSQL_PASSWORD: viruskizz
+
+networks:
+  app:
