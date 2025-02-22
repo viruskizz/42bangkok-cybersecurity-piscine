@@ -26,9 +26,18 @@ services:
     networks:
       - app
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: vaccine
       MYSQL_USER: viruskizz
       MYSQL_PASSWORD: viruskizz
-
+  mssql:
+    image: mcr.microsoft.com/mssql/server
+    container_name: vaccine-mysql
+    hostname: mssql
+    networks:
+      - app
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: root
 networks:
   app:
