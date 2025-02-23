@@ -8,17 +8,17 @@ services:
       - ./app:/usr/src/app/
     networks:
       - app
-  api:
-    container_name: vaccine-api
-    hostname: api
+  dvwa:
+    container_name: vaccine-dvwa
+    hostname: dvwa
     build:
-      context: api
+      context: dvwa
     volumes:
-      - ./api:/usr/src/app
+      - ./dvwa:/app
     networks:
       - app
     ports:
-      - 3000:3000
+      - 8000:8000
   mysql:
     image: mysql:8.0
     container_name: vaccine-mysql
@@ -28,16 +28,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: vaccine
-      MYSQL_USER: viruskizz
-      MYSQL_PASSWORD: viruskizz
-  mssql:
-    image: mcr.microsoft.com/mssql/server
-    container_name: vaccine-mysql
-    hostname: mssql
-    networks:
-      - app
-    environment:
-      ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: root
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
 networks:
   app:
