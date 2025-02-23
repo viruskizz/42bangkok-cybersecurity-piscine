@@ -1,9 +1,5 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse
-
-from .forms import GetUserForm
+from django.shortcuts import render, redirect
+from .forms import UserForm, LoginForm
 from .models import User
 
 # Low
@@ -15,12 +11,27 @@ from .models import User
 
 def index(request):
     users_count = User.objects.count()
+    users = []
+    form = UserForm()
     if request.method == "GET":
-        form = GetUserForm(request.GET)
+        form = UserForm(request.GET)
         if form.is_valid():
-            id = form['user_id'].value()
-            query  = f"SELECT * FROM users WHERE id = {id}"
+            id = form['id'].value()
+            query  = f"SELECT * FROM {User.Meta.db_table} WHERE id = {id}"
             users = User.objects.raw(query)
-            for u in users:
-                print(u)
     return render(request, "pgsql/display.html", {"form": form, "users_count": users_count, "users": users})
+
+def login(request):
+    form = LoginForm()
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        username = form['username'].value
+        password = form['password'].value
+        query  = f"SELECT * FROM {User.Meta.db_table} WHERE username = {username} and password = {password} LIMIT 1"
+        users = User.objects.raw(query)
+        print(len(users))
+        # if user is not None:
+        #     # Log user in
+        #     login(request, user)
+        #     return redirect('/')
+    return render(request, "pgsql/login.html", { 'form': form })

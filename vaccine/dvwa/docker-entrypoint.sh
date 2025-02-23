@@ -1,9 +1,11 @@
 APP=mysql
 python manage.py makemigrations $APP
-python manage.py migration --database=$APP
+python manage.py migrate --database=$APP
+python manage.py loaddata fixtures/$APP.json --app $APP --database $APP
+
 APP=pgsql
 python manage.py makemigrations $APP
-python manage.py migration --database=$APP
+python manage.py migrate --database=$APP
 python manage.py loaddata fixtures/$APP.json --app $APP --database $APP
 
 # Start Django

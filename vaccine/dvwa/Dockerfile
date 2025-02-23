@@ -1,9 +1,12 @@
 # Use the official Python runtime image
 FROM python:3.13  
- 
+
 # Create the app directory
 RUN mkdir /app
- 
+
+COPY docker-entrypoint.sh /tools/
+RUN chmod +x tools/*.sh
+
 # Set the working directory inside the container
 WORKDIR /app
  
@@ -29,4 +32,4 @@ COPY . /app/
 EXPOSE 8000
  
 # Run Django’s development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["bash", "/tools/docker-entrypoint.sh"]

@@ -1,6 +1,6 @@
 [
     {
-        "model": "pgsql.user",
+        "model": "mysql.user",
         "pk": 1,
         "fields": {
             "username": "john",
@@ -10,7 +10,7 @@
         }
     },
     {
-        "model": "pgsql.user",
+        "model": "mysql.user",
         "pk": 2,
         "fields": {
             "username": "paul",
@@ -20,7 +20,7 @@
         }
     },
     {
-        "model": "pgsql.user",
+        "model": "mysql.user",
         "pk": 3,
         "fields": {
             "username": "martin",
@@ -30,7 +30,7 @@
         }
     },
     {
-        "model": "pgsql.user",
+        "model": "mysql.user",
         "pk": 4,
         "fields": {
             "username": "michael",
@@ -40,7 +40,7 @@
         }
     },
     {
-        "model": "pgsql.user",
+        "model": "mysql.user",
         "pk": 5,
         "fields": {
             "username": "melvin",

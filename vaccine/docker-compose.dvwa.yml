@@ -10,6 +10,12 @@ services:
       - web
     ports:
       - 8000:8000
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      pgsql:
+        condition: service_healthy
   mysql:
     image: mysql:8.0
     container_name: vaccine-mysql
@@ -23,6 +29,11 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: mysqladmin ping -h localhost -u $$DB_USERNAME --password=$$DB_PASSWORD
+      interval: 5s
+      timeout: 5s
+      retries: 12
   pgsql:
     image: postgres
     container_name: vaccine-pgsql
@@ -35,6 +46,10 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "vaccine", "-U", "${DB_USERNAME}" ]
+      interval: 5s
+      retries: 12
   adminer:
     image: adminer
     restart: always

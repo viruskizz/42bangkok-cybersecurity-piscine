@@ -16,6 +16,8 @@ clean: down
 	-docker rmi -f $$(docker images "${NAME}-*" | awk 'NR!=1 {print}' | awk '{print $$1}')
 	-docker rmi -f $$(docker images --filter "dangling=true" -q --no-trunc)
 
+fclean: clean fclean-dvwa
+
 .PHONY: up down stop clean fclean re
 
 ### DVWA ###
@@ -30,6 +32,10 @@ stop-dvwa:
 
 down-dvwa:
 	docker compose -f ${DVWA_FILE} down
+
+fclean-dvwa:
+	sudo rm -rf pgdata mydata
+	sudo rm -rf $$(find dvwa/*/migrations ! -name __init__.py -type f)
 
 .PHONY: dvwa exec-dvwa stop-dvwa down-dvwa
 
