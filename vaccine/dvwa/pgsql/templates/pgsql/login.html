@@ -11,7 +11,12 @@
       <form method="POST" action="{% url 'login' %}">
           {{ form }}
           {% csrf_token %}  
-          <button type="submit" class="btn btn-primary">Login</button>
+          <div class="d-grid">
+            {% if error_message %}
+            <p class="text-danger">{{ error_message }}</p>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
       </form>
     </div>
   </div>
