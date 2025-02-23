@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pgsql.apps.PgsqlConfig',
+    'mysql',
+    'pgsql',
 ]
 
 MIDDLEWARE = [
@@ -52,10 +54,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'dvwa.urls'
 
+print(os.path.join(BASE_DIR, 'templates'))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,13 +84,25 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    # "mysql": {
-    #     "NAME": "vaccine",
-    #     "ENGINE": "django.db.backends.mysql",
-    #     "USER": "admin",
-    #     "PASSWORD": "password",
-    # },
+    "mysql": {
+        "ENGINE": "django.db.backends.mysql",
+        "HOST": "mysql",
+        "PORT": "3306",
+        "NAME": "vaccine",
+        "USER": "admin",
+        "PASSWORD": "password",
+    },
+    "pgsql": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": "pgsql",
+        "PORT": "5432",
+        "NAME": "vaccine",
+        "USER": "admin",
+        "PASSWORD": "password",
+    },
 }
+
+DATABASE_ROUTERS = ['mysql.dbRouter.AppRouter', 'pgsql.dbRouter.AppRouter']
 
 
 # Password validation

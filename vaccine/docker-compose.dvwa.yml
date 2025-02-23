@@ -1,0 +1,47 @@
+services:
+  dvwa:
+    container_name: vaccine-dvwa
+    hostname: dvwa
+    build:
+      context: dvwa
+    volumes:
+      - ./dvwa:/app
+    networks:
+      - web
+    ports:
+      - 8000:8000
+  mysql:
+    image: mysql:8.0
+    container_name: vaccine-mysql
+    hostname: mysql
+    networks:
+      - web
+    volumes:
+      - ./mydata:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+  pgsql:
+    image: postgres
+    container_name: vaccine-pgsql
+    hostname: pgsql
+    networks:
+      - web
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - web
+
+networks:
+  web:

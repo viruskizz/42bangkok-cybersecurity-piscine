@@ -1,0 +1,8 @@
+services:
+  app:
+    container_name: vaccine-app
+    hostname: app
+    build:
+      context: app
+    volumes:
+      - ./app:/usr/src/app/

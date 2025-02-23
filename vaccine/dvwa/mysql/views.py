@@ -1,8 +1,8 @@
+from django.shortcuts import render
+
+# Create your views here.
 from django.http import HttpResponse
-import datetime
 
 
 def index(request):
-    now = datetime.datetime.now()
-    html = '<html lang="en"><body>It is now %s.</body></html>' % now
-    return HttpResponse(html)
+    return HttpResponse("Hello, world. You're at the mysql index.")
