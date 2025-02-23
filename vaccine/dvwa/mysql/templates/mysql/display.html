@@ -1,0 +1,46 @@
+<!-- sign-in.html -->
+{% extends "base.html" %}
+
+{% block title %}Retrive ID{% endblock %}
+
+<div class="container">
+    {% block content %}
+    {% if users_count == 0 %}
+        <div class="card p-2">
+            <div class="card-body">
+                <p>No Data available, please use the following command line before use:</p>
+                <pre>$ python3 manage.py loaddata ex09/static/ex09_initial_data.json --app pgsql --format=json</pre>
+            </div>
+        </div>
+    {% endif %}
+    {% if users_count != 0 %}
+    <div class="card">
+        <div class="card-body">
+            <h1>Retrive by id</h1>
+            <form action="" method="get">
+                {{ form }}
+                <button type="submit" class="btn btn-primary">SEARCH</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if users|length != 0 %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!-- sign-in.html -->
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card" style="width: 360px; border: 1">
+    <div class="card-body">
+      <h1>Login</h1>
+      <form method="POST" action="{% url 'login' %}">
+          {{ form }}
+          <div class="d-grid">
+            {% if error_message %}
+            <p class="text-danger">{{ error_message }}</p>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
