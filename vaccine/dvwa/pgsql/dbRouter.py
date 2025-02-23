@@ -1,5 +1,5 @@
-# DB router for app1
-class AppRouter(object):
+# DB router for pgsql
+class AppPgSqlLRouter(object):
     """
     A router to control db operations
     """

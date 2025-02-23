@@ -102,7 +102,7 @@ DATABASES = {
     },
 }
 
-DATABASE_ROUTERS = ['mysql.dbRouter.AppRouter', 'pgsql.dbRouter.AppRouter']
+DATABASE_ROUTERS = ['mysql.dbRouter.AppRouter', 'pgsql.dbRouter.AppPgSqlLRouter']
 
 
 # Password validation
@@ -141,7 +141,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+FIXTURE_DIRS = ['fixtures/']

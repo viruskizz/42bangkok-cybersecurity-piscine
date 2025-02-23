@@ -14,10 +14,13 @@ from .models import User
 # $query  = "SELECT first_name, last_name FROM users WHERE user_id = '$id' LIMIT 1;";
 
 def index(request):
-    all_users = []
+    users_count = User.objects.count()
     if request.method == "GET":
         form = GetUserForm(request.GET)
         if form.is_valid():
-            all_users = User.objects.all()
-            print(all_users)
-    return render(request, "pgsql/display.html", {"users": all_users})
+            id = form['user_id'].value()
+            query  = f"SELECT * FROM users WHERE id = {id}"
+            users = User.objects.raw(query)
+            for u in users:
+                print(u)
+    return render(request, "pgsql/display.html", {"form": form, "users_count": users_count, "users": users})
