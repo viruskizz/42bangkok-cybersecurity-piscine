@@ -1,0 +1,3 @@
+[submodule "vaccine/vaccine/dvwa-sql-injection"]
+	path = vaccine/vaccine/dvwa-sql-injection
+	url = git@github.com:viruskizz/dvwa-sql-injection.git
