@@ -30,13 +30,13 @@ dev-app:
 exec-app:
 	make -C ${APP_DIR} exec
 
-stop-dvwa:
+stop-app:
 	make -C ${APP_DIR} stop
 
-down-dvwa:
+down-app:
 	make -C ${APP_DIR} down
 
-fclean-dvwa:
+fclean-app:
 	make -C ${APP_DIR} fclean
 
 rmdir:

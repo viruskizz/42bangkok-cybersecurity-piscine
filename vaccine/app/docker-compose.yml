@@ -6,3 +6,10 @@ services:
       context: .
     volumes:
       - .:/usr/src/app/
+    networks:
+      - proxy-dvwa-web
+
+networks:
+  proxy-dvwa-web:
+    name: dvwa_web
+    external: true
