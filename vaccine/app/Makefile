@@ -26,5 +26,6 @@ clean: down
 	-docker rmi -f $$(docker images --filter "dangling=true" -q --no-trunc)
 
 fclean: clean
+	-rm -rf output
 
 .PHONY: up down stop clean fclean re exec

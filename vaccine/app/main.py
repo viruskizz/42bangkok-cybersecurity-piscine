@@ -40,11 +40,10 @@ def take_vaccine():
     with open("payload.list.yml") as f:
         vaccine_list = yaml.safe_load(f)
         for db, values in vaccine_list.items():
-            print(f'Take vaccine on database {db}')
+            print(f'== Take vaccine on database {db} ==')
             for type, queries in values.items():
-                print(f'tring on {type} type')
+                print(f'-- tring on {type} type --')
                 for index, q in enumerate(queries):
-                    # make_request(q)
                     query_name = f"{db}-{type}-{index}"
                     print(query_name)
                     response = make_request(q)
@@ -62,11 +61,15 @@ def make_request_headers():
 def make_request(query: str):
     try:
         headers = make_request_headers()
-        print(headers)
+
         if args.request.upper() == 'POST':
-            r = requests.post(args.url, headers=headers)
+            payload = {'user': 'admin', 'password': query}
+            r = requests.post(args.url, headers=headers, data=payload)
+        elif args.request.upper() == 'HEAD':
+            r = requests.head(args.url, headers=headers)
         else:
-            r = requests.get(args.url, headers=headers)
+            payload = {'id': query}
+            r = requests.get(args.url, headers=headers, params=payload)
         if r.status_code == 200:
             return r.text
         else:
