@@ -27,5 +27,6 @@ clean: down
 
 fclean: clean
 	-rm -rf output
+	-rm -rf output.tar
 
 .PHONY: up down stop clean fclean re exec

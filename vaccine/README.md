@@ -36,9 +36,13 @@ Example
 
 ## Ref
 - [Posgresql]
+- [SQLi Time-base]
+
+[SQLi Time-base]: https://medium.com/@vikramroot/exploiting-time-based-sql-injections-data-exfiltration-791aa7f0ae87
 
 [Posgresql]: https://neon.tech/postgresql/postgresql-administration/postgresql-describe-table
-https://www.invicti.com/blog/web-security/sql-injection-cheat-sheet/
+[SQLi]: https://www.invicti.com/blog/web-security/sql-injection-cheat-sheet/
+
 https://github.com/OWASP/www-project-web-security-testing-guide/blob/master/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection.md
 
 https://github.com/payloadbox/sql-injection-payload-list
